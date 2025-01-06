@@ -1,0 +1,14 @@
+import discord
+from discord import app_commands
+from discord.ext import commands
+
+class Ping(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        super().__init__()
+
+    @commands.command()
+    #escreva o comando aqui...
+
+async def setup(bot):
+    await bot.add_cog(Ping(bot))
