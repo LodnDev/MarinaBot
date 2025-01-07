@@ -7,9 +7,9 @@ class ping(commands.Cog):
         self.bot = bot
         super().__init__()
 
-    @commands.command()
-    async def ping(self, ctx):
-        await ctx.reply('Pong')
+    @app_commands.command()
+    async def ping(self, interact:discord.Interaction):
+        await interact.response.send_message('Pong')
 
 async def setup(bot):
     await bot.add_cog(ping(bot))

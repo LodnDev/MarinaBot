@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
 import json
 import os
 
@@ -25,6 +24,15 @@ async def load_commands():
     for arquivo in os.listdir('comandos'):
         if arquivo.endswith('.py'):
             await bot.load_extension(f'comandos.{arquivo[:-3]}')
+
+#Comando Para Sincronizar os Slash Command:
+@bot.command()
+async def sinc(ctx:commands.Context):
+    if ctx.author.id == 638799315917078538:
+        sincronizar = await bot.tree.sync()
+        await ctx.reply(f'Comandos sincronizados: {len(sincronizar)}')
+    else:
+        await ctx.reply(f'{ctx.author.display_name}, esse comando é apenas para o desenvolvedor')
 
 #Iniciando o Bot:
 @bot.event
