@@ -8,16 +8,52 @@ class iniciar(commands.Cog):
         super().__init__()
 
     @app_commands.command()
-    async def iniciar(self, interaction:discord.Interaction):
-        async def comprar_casa(interactio:discord.Interaction):
+    async def iniciar(self, interact:discord.Interaction):
+        async def comprar_casa( interact:discord.Interaction):
+
+            async def select_casa(interact:discord.Interaction):
+
+                async def cosntruindo_casa(interact:discord.Interaction):
+                    servidor = interact.guild
+                    canais = servidor.categories
+                    nomes_canais = [canal.category for canal in canais]
+                    await interact.response.send_message(nomes_canais)
+
+
+                escolha = interact.data['values'][0]
+                casas = {'Nv1':'Casa Nivel 1', 'Nv2':'Casa Nivel 2', 'Nv3':'Casa Nivel 3'}
+                casa_escolhida = casas[escolha]
+
+                embedConstruir = discord.Embed(title='Passo 2', description=f'Beleza, Agora que compramos a nossa {casa_escolhida}, Vamos Construi-la')
+                embedConstruir.color = discord.Color.dark_orange()
+                embedConstruir.set_footer(text='Pressione o botão para começar a construção da casa')
+
+                botaoConstuir = discord.ui.Button(label='⚒️ COMEÇAR CONSTRUÇÂO ⚒️')
+                botaoConstuir.callback = cosntruindo_casa
+                view = discord.ui.View()
+                view.add_item(botaoConstuir)
+                await interact.response.send_message(embed=embedConstruir, view=view)
+            
             embedCasa = discord.Embed(title='Passo 1', 
-                                      description='Primeiro passo para nossa jornada se iniciar é construir a sua casa')
-            embed.color = discord.Color.green()
-            embed.set_footer(text='Escolha qual tipo de casa Você vai comprar')
+                                      description='Primeiro passo para nossa jornada se iniciar é comprar a nossa primeira casa')
+            embedCasa.color = discord.Color.green()
+            embedCasa.set_footer(text='Escolha qual tipo de casa Você vai Comprar')
 
-            await interactio.response.edit_message(embed=embedCasa)
+            select = discord.ui.Select(placeholder='Selecionar Casa')
+            option = [
+                discord.SelectOption(label='Casa Nivel 1 -- 0 🪙', value='Nv1'),
+                discord.SelectOption(label='Casa Nivel 2 -- 100 🪙', value='Nv2'),
+                discord.SelectOption(label='Casa Nivel 3 -- 500 🪙', value='Nv3')
+            ]
 
-        embed = discord.Embed(title='O Incio', description=f'OK {interaction.user.display_name}, Vamos Começar!')
+            select.options = option
+            select.callback = select_casa
+            view = discord.ui.View()
+            view.add_item(select)
+
+            await interact.response.edit_message(embed=embedCasa, view=view)
+
+        embed = discord.Embed(title='O Incio', description=f'OK {interact.user.display_name}, Vamos Começar!')
         embed.color = discord.Color.gold()
         embed.set_footer(text='Clique no Botão para Continuar')
 
@@ -27,7 +63,7 @@ class iniciar(commands.Cog):
 
         view.add_item(botao)
 
-        await interaction.response.send_message(embed=embed, view=view)
+        await interact.response.send_message(embed=embed, view=view)
 
 async def setup(bot):
     await bot.add_cog(iniciar(bot))
