@@ -9,15 +9,31 @@ class iniciar(commands.Cog):
 
     @app_commands.command()
     async def iniciar(self, interact:discord.Interaction):
+        
         async def comprar_casa( interact:discord.Interaction):
 
             async def select_casa(interact:discord.Interaction):
 
                 async def cosntruindo_casa(interact:discord.Interaction):
                     servidor = interact.guild
-                    canais = servidor.categories
-                    nomes_canais = [canal.category for canal in canais]
-                    await interact.response.send_message(nomes_canais)
+                    canal = interact.channel
+                    categoria = canal.category
+
+                    if categoria.name != 'Fora da Casa':
+                        await categoria.edit(name='Fora da Casa')
+ 
+                    if canal.name != 'grama':
+                        await canal.edit(name='grama')
+                   
+                    lista = [lista.name for lista in servidor.categories]
+                    if not 'Dentro da Casa' in lista:             
+                        await servidor.create_category(name='Dentro da Casa')
+                        id=  discord.utils.get(servidor.categories, name='Dentro da Casa')
+                        await id.create_text_channel(name='Sala')
+                        await id.create_text_channel(name='Quarto')
+                        await id.create_text_channel(name='Cozinha')
+
+                    await interact.response.send_message(f'{interact.user.display_name}, A Sua Casa Está Pronta')
 
 
                 escolha = interact.data['values'][0]
@@ -33,6 +49,7 @@ class iniciar(commands.Cog):
                 view = discord.ui.View()
                 view.add_item(botaoConstuir)
                 await interact.response.send_message(embed=embedConstruir, view=view)
+
             
             embedCasa = discord.Embed(title='Passo 1', 
                                       description='Primeiro passo para nossa jornada se iniciar é comprar a nossa primeira casa')
@@ -53,6 +70,7 @@ class iniciar(commands.Cog):
 
             await interact.response.edit_message(embed=embedCasa, view=view)
 
+
         embed = discord.Embed(title='O Incio', description=f'OK {interact.user.display_name}, Vamos Começar!')
         embed.color = discord.Color.gold()
         embed.set_footer(text='Clique no Botão para Continuar')
@@ -64,6 +82,7 @@ class iniciar(commands.Cog):
         view.add_item(botao)
 
         await interact.response.send_message(embed=embed, view=view)
+
 
 async def setup(bot):
     await bot.add_cog(iniciar(bot))
